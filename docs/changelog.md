@@ -1,6 +1,14 @@
 # Changelog
 
-## 2026-04-03 — Session 7
+## 2026-04-03 — Session 7 (Review Fixes)
+
+### Fixed
+- **`job_repository.py`** — InMemoryJobRepository singleton so status persists across API/worker
+- **`arq_settings.py`** — WorkerSettings uses `settings.redis_url`, added `max_retries=3`
+- **`jobs.py`** — Actually enqueues to Redis, reads UploadFile content, uses singleton repository
+- **`workflow.py`** — Removed redundant `add_edge` calls conflicting with conditional edges
+- **`context_node.py`** — Path resolution using `Path` instead of nested `dirname`
+- **`arq_settings.py`** — Fixed `ArqRedis` import, `RedisSettings.from_dsn()` for Redis URL
 
 ### Added
 - **`.gitignore`** — Python, venv, .env, IDE, test cache, FAISS index files

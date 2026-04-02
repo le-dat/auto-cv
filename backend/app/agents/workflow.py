@@ -46,12 +46,8 @@ def build_workflow(llm: BaseChatModel) -> StateGraph:
     # Set entry point
     workflow.set_entry_point("parse")
 
-    # Normal flow
-    workflow.add_edge("parse", "validate")
-    workflow.add_edge("validate", "context")
+    # Normal flow for nodes WITHOUT conditional edges
     workflow.add_edge("context", "match")
-    workflow.add_edge("match", "rewrite")
-    workflow.add_edge("rewrite", "format")
     workflow.add_edge("format", END)
 
     # Conditional edge from parse on error

@@ -2,7 +2,8 @@
 
 import uuid
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+import redis.asyncio as redis
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 
 from app.core.config import settings
 from app.models.schemas import JobCreateResponse, JobStatusResponse
@@ -12,9 +13,25 @@ router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
 def get_repository() -> AbstractJobRepository:
-    """Dependency that provides the job repository."""
-    # TODO: Wire up PostgresJobRepository in production
-    return InMemoryJobRepository()
+    """Dependency that provides the job repository singleton."""
+    return InMemoryJobRepository.get_instance()
+
+
+async def _read_upload_file(file: UploadFile | None) -> tuple[str | None, str | None]:
+    """Read upload file content and filename.
+
+    Returns:
+        Tuple of (text_content, filename)
+    """
+    if not file:
+        return None, None
+    content = await file.read()
+    # Try to decode as text (for PDF/DOCX this won't be perfect but LLM can handle it)
+    try:
+        text = content.decode("utf-8", errors="replace")
+    except Exception:
+        text = content.decode("latin-1", errors="replace")
+    return text, file.filename
 
 
 @router.post(
@@ -24,6 +41,7 @@ def get_repository() -> AbstractJobRepository:
     summary="Submit a CV + Job Description for rewriting",
 )
 async def create_job(
+    request: Request,
     cv_file: UploadFile | None = File(None),
     cv_text: str | None = Form(None),
     jd_file: UploadFile | None = File(None),
@@ -34,19 +52,47 @@ async def create_job(
 
     Returns immediately with 202 Accepted and a job_id for polling.
     """
-    # Validate file types if provided
+    # Read file content if provided
     if cv_file:
         _validate_file_type(cv_file.filename)
+        cv_file_text, cv_file_name = await _read_upload_file(cv_file)
+        cv_text = cv_text or cv_file_text
+    else:
+        cv_file_name = None
+
     if jd_file:
         _validate_file_type(jd_file.filename)
+        jd_file_text, jd_file_name = await _read_upload_file(jd_file)
+        jd_text = jd_text or jd_file_text
+    else:
+        jd_file_name = None
+
+    # Require at least text input
+    if not cv_text and not cv_file:
+        raise HTTPException(status_code=400, detail="Either cv_text or cv_file required")
+    if not jd_text and not jd_file:
+        raise HTTPException(status_code=400, detail="Either jd_text or jd_file required")
 
     # Create job record
     job_id = str(uuid.uuid4())
     record = await repository.create(job_id)
 
-    # TODO: Enqueue to ARQ/Redis for async processing
-    # from app.workers.arq_settings import enqueue_job
-    # await enqueue_job(job_id, cv_text, jd_text, cv_file, jd_file)
+    # Enqueue to ARQ/Redis
+    redis_client: redis.Redis | None = getattr(request.app.state, "redis", None)
+    if redis_client:
+        from app.workers.arq_settings import enqueue_job
+        await enqueue_job(
+            redis_client,
+            job_id,
+            cv_text=cv_text,
+            cv_file_name=cv_file_name,
+            jd_text=jd_text,
+            jd_file_name=jd_file_name,
+        )
+    else:
+        # No Redis available - log warning but don't fail
+        import logging
+        logging.warning(f"No Redis connection - job {job_id} not enqueued")
 
     return JobCreateResponse(
         job_id=record.job_id,

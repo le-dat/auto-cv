@@ -39,10 +39,24 @@ class AbstractJobRepository(ABC):
 
 
 class InMemoryJobRepository(AbstractJobRepository):
-    """In-memory job repository for tests and dev without a database."""
+    """In-memory job repository for tests and dev without a database.
+
+    Use the singleton instance via `InMemoryJobRepository.get_instance()`
+    to ensure job records persist across API and worker processes.
+    """
+
+    _instance: "InMemoryJobRepository | None" = None
+    _jobs: dict[str, JobRecord]
 
     def __init__(self) -> None:
         self._jobs: dict[str, JobRecord] = {}
+
+    @classmethod
+    def get_instance(cls) -> "InMemoryJobRepository":
+        """Get the singleton instance, creating it if needed."""
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     async def create(self, job_id: str) -> JobRecord:
         record = JobRecord(job_id=job_id, status=JobStatus.PENDING)

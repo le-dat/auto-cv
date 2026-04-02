@@ -1,6 +1,6 @@
 """Context node — loads knowledge docs and dynamic context."""
 
-import os
+from pathlib import Path
 from typing import Any
 
 from langchain_core.language_models import BaseChatModel
@@ -66,23 +66,21 @@ class ContextNode:
         chunks: list[str] = []
         knowledge_dir = settings.knowledge_dir
 
-        # Resolve relative path from backend directory
-        if not os.path.isabs(knowledge_dir):
-            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-            knowledge_dir = os.path.join(base_dir, knowledge_dir)
+        # Resolve relative path from backend/app directory
+        if not Path(knowledge_dir).is_absolute():
+            base_dir = Path(__file__).parent.parent.parent.parent
+            knowledge_dir = base_dir / knowledge_dir
 
-        if not os.path.exists(knowledge_dir):
+        knowledge_path = Path(knowledge_dir)
+        if not knowledge_path.exists():
             return chunks
 
-        for filename in os.listdir(knowledge_dir):
-            if filename.endswith(".md"):
-                filepath = os.path.join(knowledge_dir, filename)
-                try:
-                    with open(filepath, encoding="utf-8") as f:
-                        content = f.read()
-                        chunks.append(f"knowledge:{filename}\n{content}")
-                except Exception:
-                    pass
+        for filepath in sorted(knowledge_path.glob("*.md")):
+            try:
+                content = filepath.read_text(encoding="utf-8")
+                chunks.append(f"knowledge:{filepath.name}\n{content}")
+            except Exception:
+                pass
 
         return chunks[: settings.knowledge_max_docs]
 
