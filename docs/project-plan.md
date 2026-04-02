@@ -231,44 +231,44 @@ Steps 33-37 (tests)
 ## Checklist Format
 
 ```
-[ ] Phase 0: Project Scaffolding
-  [ ] Step 1: Create backend directory structure
-  [ ] Step 2: Replace .env.example with CV Optimizer vars
-  [ ] Step 3: Create requirements.txt
-  [ ] Step 4: Create pyproject.toml
-[ ] Phase 1: Core Infrastructure (~2 days)
-  [ ] Step 5: Implement app/core/config.py
-  [ ] Step 6: Implement app/core/exceptions.py
-  [ ] Step 7: Implement app/core/llm_factory.py
-  [ ] Step 8: Implement app/models/schemas.py
-  [ ] Step 9: Implement app/repositories/job_repository.py
-[ ] Phase 2: Services Layer (~2 days)
-  [ ] Step 10: Implement app/services/parser/
-  [ ] Step 11: Implement app/services/context/base.py
-  [ ] Step 12: Implement app/services/context/providers/
-  [ ] Step 13: Implement app/services/context/__init__.py
-  [ ] Step 14: Implement app/services/matcher.py
-[ ] Phase 3: LangGraph Agents (~2 days)
-  [ ] Step 15: Implement app/agents/state.py
-  [ ] Step 16: Implement parse_node.py
-  [ ] Step 17: Implement validate_node.py
-  [ ] Step 18: Implement context_node.py
-  [ ] Step 19: Implement match_node.py
-  [ ] Step 20: Implement rewrite_node.py
-  [ ] Step 21: Implement format_node.py
-  [ ] Step 22: Implement workflow.py
-[ ] Phase 4: API & Worker (~2 days)
-  [ ] Step 23: Implement exception_handler.py
-  [ ] Step 24: Implement jobs.py routes
-  [ ] Step 25: Implement admin.py routes
-  [ ] Step 26: Implement health.py
-  [ ] Step 27: Implement router.py
-  [ ] Step 28: Implement cv_worker.py + arq_settings.py
-  [ ] Step 29: Implement main.py
-[ ] Phase 5: Docker + Knowledge Base (~1 day)
-  [ ] Step 30: Write docker-compose.yml
-  [ ] Step 31: Write Dockerfile
-  [ ] Step 32: Create app/knowledge/ .md files
+[?] Phase 0: Project Scaffolding
+  [✅] Step 1: Create backend directory structure
+  [✅] Step 2: Replace .env.example with CV Optimizer vars
+  [✅] Step 3: Create requirements.txt
+  [✅] Step 4: Create pyproject.toml
+[✅] Phase 1: Core Infrastructure (~2 days)
+  [✅] Step 5: Implement app/core/config.py
+  [✅] Step 6: Implement app/core/exceptions.py
+  [✅] Step 7: Implement app/core/llm_factory.py
+  [✅] Step 8: Implement app/models/schemas.py
+  [✅] Step 9: Implement app/repositories/job_repository.py
+[✅] Phase 2: Services Layer (~2 days)
+  [✅] Step 10: Implement app/services/parser/
+  [✅] Step 11: Implement app/services/context/base.py
+  [✅] Step 12: Implement app/services/context/providers/
+  [✅] Step 13: Implement app/services/context/__init__.py
+  [✅] Step 14: Implement app/services/matcher.py
+[✅] Phase 3: LangGraph Agents (~2 days)
+  [✅] Step 15: Implement app/agents/state.py
+  [✅] Step 16: Implement parse_node.py
+  [✅] Step 17: Implement validate_node.py
+  [✅] Step 18: Implement context_node.py
+  [✅] Step 19: Implement match_node.py
+  [✅] Step 20: Implement rewrite_node.py
+  [✅] Step 21: Implement format_node.py
+  [✅] Step 22: Implement workflow.py
+[✅] Phase 4: API & Worker (~2 days)
+  [✅] Step 23: Implement exception_handler.py
+  [✅] Step 24: Implement jobs.py routes
+  [✅] Step 25: Implement admin.py routes
+  [✅] Step 26: Implement health.py
+  [✅] Step 27: Implement router.py
+  [✅] Step 28: Implement cv_worker.py + arq_settings.py
+  [✅] Step 29: Implement main.py
+[✅] Phase 5: Docker + Knowledge Base (~1 day)
+  [✅] Step 30: Write docker-compose.yml
+  [✅] Step 31: Write Dockerfile
+  [✅] Step 32: Create app/knowledge/ .md files
 [ ] Phase 6: Testing (~1 day)
   [ ] Step 33: Write tests/conftest.py
   [ ] Step 34: Write unit tests for parsers

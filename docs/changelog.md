@@ -1,5 +1,46 @@
 # Changelog
 
+## 2026-04-03 — Session 7
+
+### Added
+- **`.gitignore`** — Python, venv, .env, IDE, test cache, FAISS index files
+- **`backend/app/api/v1/routes/jobs.py`** — POST /jobs (202), GET /jobs/{id} with multipart/form support
+- **`backend/app/api/v1/routes/admin.py`** — POST /admin/faiss/build trigger
+- **`backend/app/api/v1/routes/health.py`** — GET /health endpoint
+- **`backend/app/api/v1/router.py`** — Aggregates all route modules under /api/v1
+- **`backend/app/api/v1/middleware/auth.py`** — Auth middleware placeholder (TODO: implement)
+- **`backend/app/api/v1/middleware/rate_limit.py`** — Rate limiting middleware placeholder (TODO: implement)
+- **`backend/app/api/v1/middleware/exception_handler.py`** — Catches CVOptimizerError → JSON responses
+- **`backend/app/agents/state.py`** — WorkflowState TypedDict for LangGraph
+- **`backend/app/agents/workflow.py`** — build_workflow() with parse→validate→context→match→rewrite→format
+- **`backend/app/agents/nodes/parse_node.py`** — LLM-based CV/JD text extraction
+- **`backend/app/agents/nodes/validate_node.py`** — Pydantic validation of extracted data
+- **`backend/app/agents/nodes/context_node.py`** — Markdown/FAISS/DB/HTTP context loading
+- **`backend/app/agents/nodes/match_node.py`** — LLM-based skill matching analysis
+- **`backend/app/agents/nodes/rewrite_node.py`** — CV rewriting with context + match analysis
+- **`backend/app/agents/nodes/format_node.py`** — Final GenerateResult assembly
+- **`backend/app/services/parser/__init__.py`** — ParserService with PDF/DOCX/Text Strategy pattern
+- **`backend/app/services/context/__init__.py`** — ContextProvider base + MarkdownDocProvider, FAISSContextProvider, DBContextProvider, HTTPContextProvider stubs
+- **`backend/app/services/matcher.py`** — MatcherService for ATS skill matching
+- **`backend/app/services/rewriter.py`** — RewriterService for CV rewriting
+- **`backend/app/workers/arq_settings.py`** — process_cv_job ARQ function + WorkerSettings
+- **`backend/app/workers/cv_worker.py`** — ARQ worker entry point
+- **`backend/app/main.py`** — FastAPI app with Redis lifespan, CORS, middleware stack
+- **`backend/app/knowledge/ats_keywords.md`** — ATS keyword guide
+- **`backend/app/knowledge/cv_style_guide.md`** — CV writing style guide
+
+### Changed
+- **`backend/app/core/config.py`** — Fixed mutable defaults: `allowed_input_types` and `context_providers` use `default_factory`
+- **`backend/app/core/llm_factory.py`** — Now wires `settings.openai_api_key`, `settings.openai_model`, etc. as defaults
+- **`backend/app/models/schemas.py`** — `JobStatus` now uses `StrEnum` instead of `str, Enum`
+- **`backend/app/services/parser/__init__.py`** — Removed unused `abc` imports
+- **`requirements.txt`** — Added `python-multipart>=0.0.9` for FastAPI file uploads
+
+### Fixed
+- **`backend/app/agents/nodes/format_node.py`** — Syntax error in list comprehension (unpacking with `or`)
+
+---
+
 ## 2026-04-01 — Session 6
 
 ### Added

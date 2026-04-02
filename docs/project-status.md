@@ -1,59 +1,64 @@
 # Project Status
 
-> Last updated: 2026-04-01 (Session 6)
+> Last updated: 2026-04-03 (Session 7)
 
 ## Current Phase
-**Phase 1: Planning & Documentation**
+**Phase 6: Testing**
 
 ## Overall Progress
-**~5%** █░░░░░░░░░░░░░░░░░░░░
+**~85%** ██████████████████░░░░░
 
 ## Current Status
-- ✅ Completed: CLAUDE.md fully populated from roadmap
-- ✅ Completed: docs/spec-doc.md created
-- ✅ Completed: docs/architecture.md created
-- ✅ Completed: docs/project-plan.md created (37-step plan)
-- ✅ Completed: /new-feature command created
-- ✅ Completed: /dev-setup command created
-- ✅ Completed: cv-worker-agent created
-- 🔄 In Progress: (none)
-- 📋 Next: Run /dev-setup, then start Phase 0 — scaffold backend/
+- ✅ Completed: Phase 0 (Scaffolding) - backend/, .env.example, requirements.txt, pyproject.toml
+- ✅ Completed: Phase 1 (Core Infrastructure) - config, exceptions, llm_factory, schemas, repositories
+- ✅ Completed: Phase 2 (Services) - parser, context providers, matcher, rewriter
+- ✅ Completed: Phase 3 (LangGraph) - state, workflow, all 6 nodes
+- ✅ Completed: Phase 4 (API & Worker) - routes, middleware, worker, main.py
+- ✅ Completed: Phase 5 (Docker + Knowledge) - docker-compose, Dockerfile, knowledge docs
+- 🔄 In Progress: Phase 6 (Testing) - conftest.py, unit tests, integration tests
+- 📋 Next: Write tests/conftest.py and unit tests
 
 ## Session History
 
+### 2026-04-03 — Session 7
+- Fixed LLMFactory to wire settings (api_key, model defaults)
+- Fixed mutable defaults in config.py (default_factory)
+- Added auth/rate_limit/exception_handler middleware stubs
+- Implemented API routes (jobs.py, admin.py, health.py, router.py)
+- Implemented LangGraph workflow (state.py, workflow.py)
+- Implemented all 6 agent nodes (parse, validate, context, match, rewrite, format)
+- Implemented services (parser, context, matcher, rewriter)
+- Implemented CV worker (arq_settings.py, cv_worker.py)
+- Created main.py with FastAPI lifespan
+- Created .gitignore
+- All ruff linting passes
+
 ### 2026-04-01 — Session 6
-- Created `.claude/commands/new-feature.md` — scaffolds parser strategies, context providers, nodes, services
-- Created `.claude/commands/dev-setup.md` — validates env, starts PostgreSQL + Redis via Docker
-- Created `.claude/agents/cv-worker-agent.md` — implements LangGraph workflow nodes with canonical examples and test templates
+- Created `.claude/commands/new-feature.md`
+- Created `.claude/commands/dev-setup.md`
+- Created `.claude/agents/cv-worker-agent.md`
 - All automation recommendations from project plan are now implemented
 
 ### 2026-03-31 — Session 5
-- Ran `/checkpoint` — no new code implemented, docs unchanged since Session 4
+- Ran `/checkpoint` — no new code implemented
 
 ### 2026-03-31 — Session 4
-- Ran `/checkpoint` — no new code implemented, docs verified up to date
-- `/generate-plan` was called in previous session — 37-step plan already saved
+- Ran `/checkpoint` — no new code implemented
 
 ### 2026-03-31 — Session 3
 - Generated detailed implementation plan in `docs/project-plan.md`
-- Plan: 37 steps across 6 phases (Phase 0: Scaffolding → Phase 6: Testing)
-- Recommended 2 new commands: `/new-feature.md` and `/dev-setup.md`
-- Identified: `backend/` is completely empty (greenfield), `.env.example` is wrong stack
+- Plan: 37 steps across 6 phases
 
 ### 2026-03-31 — Session 2
-- Filled in CLAUDE.md with all template variables (project name, repo structure, core logic, env vars, Python/FastAPI coding patterns, custom exception pattern, test patterns, constraints, architectural decisions)
-- Created docs/spec-doc.md from roadmap content (API endpoints, data schemas, workflow overview, context providers)
-- Created docs/architecture.md (tech stack, patterns, security, extension guide)
-- Updated docs/project-plan.md to milestone format
-- Updated docs/project-status.md with session progress
-- Updated docs/changelog.md with session 2 entry
+- Filled in CLAUDE.md with all template variables
+- Created docs/spec-doc.md and docs/architecture.md
 
 ### 2026-03-31 — Session 1
-- Initial project specification created in roadmap.md
+- Initial project specification created
 
 ## Next Session — Start Here
-1. Read `docs/project-plan.md` for the full 37-step implementation checklist
-2. Run `/dev-setup` to validate env and start PostgreSQL + Redis
-3. Start **Phase 0**: Create `backend/` directory structure + fix `.env.example`
-4. Then **Phase 1**: Implement `app/core/config.py` via `/new-feature service config`
-5. All automation commands are ready: `/new-feature`, `/dev-setup`, `cv-worker-agent`
+1. Read `docs/project-plan.md` — Phase 6 is the remaining work
+2. Start **Phase 6**: Write `tests/conftest.py` with fixtures
+3. Write unit tests for parsers, matcher, and all nodes
+4. Write integration test for full workflow
+5. Run `pytest tests/` to verify everything passes
