@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     # ── Limits ────────────────────────────────────────────
     max_concurrent_jobs: int = Field(default=5)
     job_timeout_seconds: int = Field(default=120)
+    worker_max_retries: int = Field(default=3, description="Max retries for failed ARQ jobs")
 
     # ── Debug ─────────────────────────────────────────────
     debug: bool = Field(default=False)

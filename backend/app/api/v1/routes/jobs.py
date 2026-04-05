@@ -1,8 +1,8 @@
 """Job submission and status polling endpoints."""
 
+import logging
 import uuid
 
-import redis.asyncio as redis
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 
 from app.core.config import settings
@@ -30,7 +30,11 @@ async def _read_upload_file(file: UploadFile | None) -> tuple[str | None, str | 
     try:
         text = content.decode("utf-8", errors="replace")
     except Exception:
-        text = content.decode("latin-1", errors="replace")
+        try:
+            text = content.decode("latin-1", errors="replace")
+        except Exception:
+            text = ""
+            logging.warning(f"Failed to decode file {file.filename}, returning empty string")
     return text, file.filename
 
 
@@ -78,7 +82,7 @@ async def create_job(
     record = await repository.create(job_id)
 
     # Enqueue to ARQ/Redis
-    redis_client: redis.Redis | None = getattr(request.app.state, "redis", None)
+    redis_client = getattr(request.app.state, "redis", None)
     if redis_client:
         from app.workers.arq_settings import enqueue_job
         await enqueue_job(
@@ -91,7 +95,6 @@ async def create_job(
         )
     else:
         # No Redis available - log warning but don't fail
-        import logging
         logging.warning(f"No Redis connection - job {job_id} not enqueued")
 
     return JobCreateResponse(

@@ -1,5 +1,6 @@
 """Context node — loads knowledge docs and dynamic context."""
 
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -79,8 +80,8 @@ class ContextNode:
             try:
                 content = filepath.read_text(encoding="utf-8")
                 chunks.append(f"knowledge:{filepath.name}\n{content}")
-            except Exception:
-                pass
+            except Exception as exc:
+                logging.warning(f"Failed to read knowledge file {filepath.name}: {exc}")
 
         return chunks[: settings.knowledge_max_docs]
 

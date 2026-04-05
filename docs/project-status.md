@@ -1,12 +1,12 @@
 # Project Status
 
-> Last updated: 2026-04-03 (Session 7)
+> Last updated: 2026-04-03 (Session 8)
 
 ## Current Phase
-**Phase 6: Testing**
+**Phase 6: Testing — COMPLETE**
 
 ## Overall Progress
-**~85%** ██████████████████░░░░░
+**~95%** ███████████████████░░░
 
 ## Current Status
 - ✅ Completed: Phase 0 (Scaffolding) - backend/, .env.example, requirements.txt, pyproject.toml
@@ -15,23 +15,23 @@
 - ✅ Completed: Phase 3 (LangGraph) - state, workflow, all 6 nodes
 - ✅ Completed: Phase 4 (API & Worker) - routes, middleware, worker, main.py
 - ✅ Completed: Phase 5 (Docker + Knowledge) - docker-compose, Dockerfile, knowledge docs
-- 🔄 In Progress: Phase 6 (Testing) - conftest.py, unit tests, integration tests
-- 📋 Next: Write tests/conftest.py and unit tests
+- ✅ Completed: Phase 6 (Testing) - conftest.py, all unit tests, integration test
+- 📋 Next: Run `pytest tests/` to verify all tests pass, then merge to master
 
 ## Session History
 
+### 2026-04-03 — Session 8
+- Fixed match_node.py JSON template braces escaping and `.strip()` before parsing
+- Fixed context_node.py to log warning instead of silently passing on file read errors
+- Fixed workflow.py comment about conditional edges
+- Fixed jobs.py graceful file decode fallback
+- Added `worker_max_retries` setting to config.py
+- Made InMemoryJobRepository singleton thread-safe with double-checked locking
+- Wired `settings.worker_max_retries` into arq_settings.py
+- Created all unit tests (repository, matcher, validate_node, context_node, format_node, parser, match_node, parse_node, rewrite_node)
+- Created integration test for full workflow
+
 ### 2026-04-03 — Session 7
-- Fixed LLMFactory to wire settings (api_key, model defaults)
-- Fixed mutable defaults in config.py (default_factory)
-- Added auth/rate_limit/exception_handler middleware stubs
-- Implemented API routes (jobs.py, admin.py, health.py, router.py)
-- Implemented LangGraph workflow (state.py, workflow.py)
-- Implemented all 6 agent nodes (parse, validate, context, match, rewrite, format)
-- Implemented services (parser, context, matcher, rewriter)
-- Implemented CV worker (arq_settings.py, cv_worker.py)
-- Created main.py with FastAPI lifespan
-- Created .gitignore
-- All ruff linting passes
 
 ### 2026-04-01 — Session 6
 - Created `.claude/commands/new-feature.md`
@@ -57,8 +57,7 @@
 - Initial project specification created
 
 ## Next Session — Start Here
-1. Read `docs/project-plan.md` — Phase 6 is the remaining work
-2. Start **Phase 6**: Write `tests/conftest.py` with fixtures
-3. Write unit tests for parsers, matcher, and all nodes
-4. Write integration test for full workflow
-5. Run `pytest tests/` to verify everything passes
+1. Run `pytest tests/` to verify all tests pass
+2. Run `ruff check backend/` to verify linting passes
+3. Create PR to merge `feat/update` into `master`
+4. Post-deploy: rebuild FAISS index via `POST /api/v1/admin/faiss/build`

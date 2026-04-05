@@ -99,7 +99,7 @@ class WorkerSettings:
     functions = [process_cv_job]
     max_jobs = 10
     job_timeout = settings.job_timeout_seconds
-    max_retries = 3  # Retry failed jobs up to 3 times
+    max_retries = settings.worker_max_retries
 
 
 # Convenience function to enqueue a job

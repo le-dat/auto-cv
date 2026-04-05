@@ -1,5 +1,6 @@
 """Repository pattern for job storage — abstract + in-memory + postgres."""
 
+import threading
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any
@@ -46,7 +47,7 @@ class InMemoryJobRepository(AbstractJobRepository):
     """
 
     _instance: "InMemoryJobRepository | None" = None
-    _jobs: dict[str, JobRecord]
+    _lock: threading.Lock = threading.Lock()
 
     def __init__(self) -> None:
         self._jobs: dict[str, JobRecord] = {}
@@ -55,7 +56,10 @@ class InMemoryJobRepository(AbstractJobRepository):
     def get_instance(cls) -> "InMemoryJobRepository":
         """Get the singleton instance, creating it if needed."""
         if cls._instance is None:
-            cls._instance = cls()
+            with cls._lock:
+                # Double-check after acquiring lock
+                if cls._instance is None:
+                    cls._instance = cls()
         return cls._instance
 
     async def create(self, job_id: str) -> JobRecord:

@@ -269,10 +269,10 @@ Steps 33-37 (tests)
   [✅] Step 30: Write docker-compose.yml
   [✅] Step 31: Write Dockerfile
   [✅] Step 32: Create app/knowledge/ .md files
-[ ] Phase 6: Testing (~1 day)
-  [ ] Step 33: Write tests/conftest.py
-  [ ] Step 34: Write unit tests for parsers
-  [ ] Step 35: Write unit tests for matcher
-  [ ] Step 36: Write unit tests for all nodes
-  [ ] Step 37: Write integration test for full workflow
+[✅] Phase 6: Testing (~1 day)
+  [✅] Step 33: Write tests/conftest.py
+  [✅] Step 34: Write unit tests for parsers
+  [✅] Step 35: Write unit tests for matcher
+  [✅] Step 36: Write unit tests for all nodes
+  [✅] Step 37: Write integration test for full workflow
 ```

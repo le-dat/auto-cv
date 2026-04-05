@@ -16,13 +16,13 @@ Given:
 - Preferred Skills: {preferred_skills}
 
 Return ONLY a valid JSON object with this structure:
-{
+{{
     "matched_skills": ["skill1", "skill2", ...],  # Skills present in both CV and JD
     "missing_skills": ["skill1", ...],            # Required skills NOT in CV
     "weak_skills": ["skill1", ...],               # Skills mentioned but not well demonstrated
     "skill_match_score": 0.85,                     # 0.0 to 1.0 normalized score
     "suggestions": ["suggestion1", ...]            # How to improve match
-}
+}}
 """
 
 
@@ -76,6 +76,7 @@ class MatchNode:
         content = response.content if hasattr(response, "content") else str(response)
 
         # Strip markdown code blocks if present
+        content = content.strip()
         if content.startswith("```"):
             content = content.split("\n", 1)[1]
             content = content.rsplit("```", 1)[0].strip()
