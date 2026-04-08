@@ -6,6 +6,8 @@ CV Optimizer uses a multi-agent LangGraph workflow orchestrated by FastAPI, with
 
 ## Tech Stack
 
+### Backend
+
 | Layer | Technology |
 |-------|------------|
 | API | FastAPI (async, OpenAPI auto-docs) |
@@ -20,56 +22,101 @@ CV Optimizer uses a multi-agent LangGraph workflow orchestrated by FastAPI, with
 | DOCX parsing | python-docx |
 | Settings | pydantic-settings |
 
+### Frontend
+
+| Layer | Technology |
+|-------|------------|
+| Framework | React 18 + Vite |
+| Language | TypeScript (strict) |
+| State | Zustand |
+| HTTP | Axios |
+| Styling | TailwindCSS (dark theme) |
+| Routing | React Router DOM |
+| File upload | react-dropzone |
+| Forms | React Hook Form + Zod |
+| Markdown | react-markdown |
+| Icons | Lucide React |
+
 ## Project Structure
 
 ```
-backend/
-├── app/
-│   ├── api/v1/
-│   │   ├── routes/
-│   │   │   ├── jobs.py        # POST /jobs, GET /jobs/{id}
-│   │   │   ├── admin.py        # FAISS rebuild trigger
-│   │   │   └── health.py
-│   │   ├── router.py
-│   │   └── middleware/
-│   │       ├── auth.py
-│   │       ├── rate_limit.py
-│   │       └── exception_handler.py
-│   ├── agents/
-│   │   ├── state.py            # WorkflowState TypedDict
-│   │   ├── workflow.py          # LangGraph builder
-│   │   └── nodes/
-│   │       ├── parse_node.py
-│   │       ├── validate_node.py
-│   │       ├── context_node.py
-│   │       ├── match_node.py
-│   │       ├── rewrite_node.py
-│   │       └── format_node.py
-│   ├── core/
-│   │   ├── config.py            # pydantic-settings
-│   │   ├── llm_factory.py       # Provider factory
-│   │   ├── exceptions.py
-│   │   └── dependencies.py
-│   ├── models/
-│   │   ├── schemas.py           # Pydantic v2 schemas
-│   │   └── db_models.py
-│   ├── repositories/
-│   │   └── job_repository.py    # Abstract + InMemory + Postgres
-│   ├── services/
-│   │   ├── parser/              # ParserStrategy pattern
-│   │   ├── context/             # ContextProvider pattern
-│   │   ├── matcher.py
-│   │   └── rewriter.py
-│   ├── knowledge/               # .md files for LLM context
-│   │   ├── skills/
-│   │   └── ats_keywords.md
-│   ├── workers/
-│   │   ├── cv_worker.py
-│   │   └── arq_settings.py
-│   └── main.py                  # FastAPI lifespan
-├── tests/
-├── Dockerfile
-└── docker-compose.yml
+auto-cv2/                          # Monorepo (FE + BE)
+│
+├── backend/                       # FastAPI backend
+│   ├── app/
+│   │   ├── api/v1/
+│   │   │   ├── routes/
+│   │   │   │   ├── jobs.py        # POST /jobs, GET /jobs/{id}
+│   │   │   │   ├── admin.py       # FAISS rebuild trigger
+│   │   │   │   └── health.py
+│   │   │   ├── router.py
+│   │   │   └── middleware/
+│   │   │       ├── auth.py
+│   │   │       ├── rate_limit.py
+│   │   │       └── exception_handler.py
+│   │   ├── agents/
+│   │   │   ├── state.py           # WorkflowState TypedDict
+│   │   │   ├── workflow.py         # LangGraph builder
+│   │   │   └── nodes/
+│   │   │       ├── parse_node.py
+│   │   │       ├── validate_node.py
+│   │   │       ├── context_node.py
+│   │   │       ├── match_node.py
+│   │   │       ├── rewrite_node.py
+│   │   │       └── format_node.py
+│   │   ├── core/
+│   │   │   ├── config.py           # pydantic-settings
+│   │   │   ├── llm_factory.py      # Provider factory
+│   │   │   ├── exceptions.py
+│   │   │   └── dependencies.py
+│   │   ├── models/
+│   │   │   ├── schemas.py          # Pydantic v2 schemas
+│   │   │   └── db_models.py
+│   │   ├── repositories/
+│   │   │   └── job_repository.py   # Abstract + InMemory + Postgres
+│   │   ├── services/
+│   │   │   ├── parser/             # ParserStrategy pattern
+│   │   │   ├── context/            # ContextProvider pattern
+│   │   │   ├── matcher.py
+│   │   │   └── rewriter.py
+│   │   ├── knowledge/              # .md files for LLM context
+│   │   │   ├── skills/
+│   │   │   └── ats_keywords.md
+│   │   ├── workers/
+│   │   │   ├── cv_worker.py
+│   │   │   └── arq_settings.py
+│   │   └── main.py                 # FastAPI lifespan
+│   ├── tests/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── fe/                            # React frontend
+│   ├── src/
+│   │   ├── main.tsx
+│   │   ├── App.tsx
+│   │   ├── index.css               # Tailwind + dark theme
+│   │   ├── lib/
+│   │   │   └── api.ts              # Axios client + API functions
+│   │   ├── store/
+│   │   │   └── jobStore.ts         # Zustand store
+│   │   ├── hooks/
+│   │   │   └── usePolling.ts       # Job status polling hook
+│   │   ├── pages/
+│   │   │   ├── UploadPage.tsx      # File/text upload form
+│   │   │   └── ResultsPage.tsx     # Poll + display results
+│   │   ├── components/
+│   │   │   ├── layout/Header.tsx
+│   │   │   ├── upload/FileDropzone.tsx
+│   │   │   └── results/ScoreDisplay.tsx
+│   │   └── types/
+│   │       └── api.ts              # TypeScript types matching BE schemas
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   └── .env.example
+│
+├── docs/
+└── CLAUDE.md
 ```
 
 ## Core Patterns
@@ -106,7 +153,11 @@ All services accept `BaseChatModel` — never a concrete class. Enables mock inj
 ## Docker
 
 ```bash
-docker compose up --build
+# Backend
+cd backend && docker compose up --build
+
+# Frontend (dev)
+cd fe && npm install && npm run dev
 ```
 
-Requires PostgreSQL and Redis containers.
+Requires PostgreSQL and Redis containers for backend.

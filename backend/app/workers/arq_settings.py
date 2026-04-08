@@ -2,9 +2,9 @@
 
 from typing import Any
 
-import arq
-from arq.connections import RedisConnection
+from arq.connections import ArqRedis, RedisSettings
 
+from app.core.config import settings
 from app.core.llm_factory import LLMFactory
 from app.models.schemas import JobStatus
 from app.repositories.job_repository import AbstractJobRepository, InMemoryJobRepository
@@ -24,16 +24,15 @@ async def process_cv_job(
         ctx: ARQ context dict (contains redis, etc.).
         job_id: Unique job identifier.
         cv_text: Raw CV text input.
-        cv_file_name: Original CV filename.
+        cv_file_name: Original CV filename (metadata only at this point).
         jd_text: Raw JD text input.
-        jd_file_name: Original JD filename.
+        jd_file_name: Original JD filename (metadata only at this point).
 
     Returns:
         Dict with job_id, status, and result/error.
     """
-    # Create repository for this job
-    # TODO: Use PostgresJobRepository in production with proper session
-    repository: AbstractJobRepository = InMemoryJobRepository()
+    # Use singleton repository so status updates persist
+    repository: AbstractJobRepository = InMemoryJobRepository.get_instance()
 
     # Update status to processing
     await repository.update_status(job_id, JobStatus.PROCESSING)
@@ -96,15 +95,16 @@ async def process_cv_job(
 class WorkerSettings:
     """ARQ worker settings."""
 
-    redis_settings = arq.RedisSettings()
+    redis_settings = RedisSettings.from_dsn(settings.redis_url)
     functions = [process_cv_job]
     max_jobs = 10
-    job_timeout = 120  # seconds
+    job_timeout = settings.job_timeout_seconds
+    max_retries = settings.worker_max_retries
 
 
 # Convenience function to enqueue a job
 async def enqueue_job(
-    redis: RedisConnection,
+    redis: ArqRedis,
     job_id: str,
     cv_text: str | None = None,
     cv_file_name: str | None = None,

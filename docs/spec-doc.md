@@ -11,6 +11,8 @@
 
 ## Stack
 
+### Backend
+
 | Layer | Library | Notes |
 |---|---|---|
 | API | FastAPI | async, OpenAPI auto-docs |
@@ -30,6 +32,17 @@
 | Cache | Redis | job status, embedding cache — **required** |
 | Logging | structlog | structured JSON, keyed by `job_id` |
 | Testing | pytest + pytest-asyncio | unit + integration |
+
+### Frontend
+
+| Layer | Library | Notes |
+|---|---|---|
+| Framework | React 18 + Vite | fast dev server + HMR |
+| Language | TypeScript | strict mode |
+| State | Zustand | minimal, no boilerplate |
+| HTTP | Axios | typed API client |
+| Styling | TailwindCSS | dark theme |
+| Routing | React Router DOM | `/` and `/jobs/:jobId` |
 
 > ⚠️ PostgreSQL + Redis are **not optional** — without them you lose job persistence across restarts, can't scale workers, and can't implement past-CV memory.
 
@@ -195,6 +208,8 @@ Key variables:
 
 ## CLI
 
+### Backend
+
 ```bash
 # File upload
 curl -X POST http://localhost:8000/api/v1/jobs \
@@ -210,6 +225,19 @@ curl http://localhost:8000/api/v1/jobs/abc-123
 
 # Trigger FAISS rebuild
 curl -X POST http://localhost:8000/api/v1/admin/faiss/build
+```
+
+### Frontend
+
+```bash
+# Install deps
+cd fe && npm install
+
+# Dev server (connects to BE at VITE_API_BASE_URL)
+npm run dev
+
+# Build for production
+npm run build
 ```
 
 ---

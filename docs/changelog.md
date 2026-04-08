@@ -1,6 +1,40 @@
 # Changelog
 
-## 2026-04-03 — Session 7
+## 2026-04-03 — Session 8 (Code Review Fixes)
+
+### Fixed
+- **`match_node.py`** — JSON template braces (`{{`/`}}`) properly escaped for f-string, added `.strip()` before parsing LLM response
+- **`context_node.py`** — Added warning log when knowledge file read fails (instead of silent pass)
+- **`workflow.py`** — Clarified comment: nodes with conditional edges don't need `add_edge` for normal flow
+- **`jobs.py`** — Graceful file decode fallback: try utf-8 → latin-1 → empty string, moved import to top-level
+- **`config.py`** — Added `worker_max_retries` setting (default 3)
+- **`job_repository.py`** — Thread-safe singleton with double-checked locking via `threading.Lock`
+- **`arq_settings.py`** — Use `settings.worker_max_retries` instead of hardcoded `3`
+
+### Added
+- **`tests/conftest.py`** — Fixtures: `repo()`, `mock_llm()`, `sample_cv_data()`, `sample_jd_data()`
+- **`tests/unit/test_repository.py`** — Repository pattern unit tests
+- **`tests/unit/test_matcher.py`** — MatcherService unit tests
+- **`tests/unit/test_validate_node.py`** — ValidateNode unit tests
+- **`tests/unit/test_context_node.py`** — ContextNode unit tests
+- **`tests/unit/test_format_node.py`** — FormatNode unit tests
+- **`tests/unit/test_parser.py`** — Parser unit tests
+- **`tests/unit/test_match_node.py`** — MatchNode unit tests
+- **`tests/unit/test_parse_node.py`** — ParseNode unit tests
+- **`tests/unit/test_rewrite_node.py`** — RewriteNode unit tests
+- **`tests/integration/test_workflow.py`** — Full workflow integration test
+
+---
+
+## 2026-04-03 — Session 7 (Review Fixes)
+
+### Fixed
+- **`job_repository.py`** — InMemoryJobRepository singleton so status persists across API/worker
+- **`arq_settings.py`** — WorkerSettings uses `settings.redis_url`, added `max_retries=3`
+- **`jobs.py`** — Actually enqueues to Redis, reads UploadFile content, uses singleton repository
+- **`workflow.py`** — Removed redundant `add_edge` calls conflicting with conditional edges
+- **`context_node.py`** — Path resolution using `Path` instead of nested `dirname`
+- **`arq_settings.py`** — Fixed `ArqRedis` import, `RedisSettings.from_dsn()` for Redis URL
 
 ### Added
 - **`.gitignore`** — Python, venv, .env, IDE, test cache, FAISS index files
