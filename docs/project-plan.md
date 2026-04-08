@@ -275,4 +275,50 @@ Steps 33-37 (tests)
   [✅] Step 35: Write unit tests for matcher
   [✅] Step 36: Write unit tests for all nodes
   [✅] Step 37: Write integration test for full workflow
+
+## Phase 7 — Frontend (~1 day)
+
+### Step 38: Scaffold FE with Vite + React + TypeScript
+- Run: `npm create vite@latest fe -- --template react-ts`
+- Done when: `cd fe && npm install` succeeds
+
+### Step 39: Install FE dependencies
+- Run: `npm install axios zustand react-dropzone react-hook-form zod lucide-react react-markdown react-router-dom @types/react-dropzone`
+- Done when: `npm run dev` starts without errors
+
+### Step 40: Configure TailwindCSS
+- Run: configure `vite.config.ts` with `@tailwindcss/vite`, set dark theme in `index.css`
+- Done when: dark theme variables render correctly
+
+### Step 41: Implement API client
+- Run: write `fe/src/lib/api.ts` with Axios + typed functions (`createJob`, `getJob`, `checkHealth`)
+- Done when: TypeScript compiles without errors
+
+### Step 42: Implement Zustand store
+- Run: write `fe/src/store/jobStore.ts` with job state + polling
+- Done when: store updates correctly on job submission
+
+### Step 43: Build UploadPage
+- Run: write `fe/src/pages/UploadPage.tsx` with FileDropzone + text areas
+- Done when: form submits and navigates to results page
+
+### Step 44: Build ResultsPage
+- Run: write `fe/src/pages/ResultsPage.tsx` with polling + ScoreDisplay + markdown
+- Done when: results display correctly after job completion
+
+### Step 45: Build Header/Layout
+- Run: write `fe/src/components/layout/Header.tsx`
+- Done when: header renders on all pages
+
+### Step 46: Wire routing
+- Run: set up `react-router-dom` in `App.tsx` and `main.tsx`
+- Done when: `/` and `/jobs/:jobId` routes work
+
+### Step 47: Update documentation
+- Run: update `docs/architecture.md`, `docs/spec-doc.md`, `docs/project-plan.md`, `docs/project-status.md`
+- Done when: all docs reflect FE/BE split
+
+### Step 48: End-to-end test
+- Run: start BE (`docker compose up`) + FE (`npm run dev`), upload CV+JD
+- Done when: complete flow works: submit → poll → see results
 ```

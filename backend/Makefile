@@ -3,7 +3,7 @@
 .PHONY: run worker run-all clean
 
 PYTHON=python3
-BACKEND_DIR=backend
+BACKEND_DIR=.
 TEST_DIR=tests
 
 ## ─────────────────────────────────────────────

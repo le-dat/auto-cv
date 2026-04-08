@@ -17,54 +17,80 @@
 ## 2. Repository Structure
 
 ```
-backend/
-├── app/
-│   ├── api/v1/
-│   │   ├── routes/
-│   │   │   ├── jobs.py          # POST /jobs, GET /jobs/{id}
-│   │   │   ├── admin.py          # FAISS rebuild trigger
-│   │   │   └── health.py
-│   │   ├── router.py
-│   │   └── middleware/
-│   │       ├── auth.py
-│   │       ├── rate_limit.py
-│   │       └── exception_handler.py
-│   ├── agents/
-│   │   ├── state.py              # WorkflowState TypedDict
-│   │   ├── workflow.py            # LangGraph builder
-│   │   └── nodes/
-│   │       ├── parse_node.py
-│   │       ├── validate_node.py
-│   │       ├── context_node.py
-│   │       ├── match_node.py
-│   │       ├── rewrite_node.py
-│   │       └── format_node.py
-│   ├── core/
-│   │   ├── config.py              # pydantic-settings
-│   │   ├── llm_factory.py         # Provider factory
-│   │   ├── exceptions.py
-│   │   └── dependencies.py
-│   ├── models/
-│   │   ├── schemas.py             # Pydantic v2 schemas
-│   │   └── db_models.py
-│   ├── repositories/
-│   │   └── job_repository.py      # Abstract + InMemory + Postgres
-│   ├── services/
-│   │   ├── parser/                # ParserStrategy pattern
-│   │   ├── context/               # ContextProvider pattern
-│   │   ├── matcher.py
-│   │   └── rewriter.py
-│   ├── knowledge/                 # .md files for LLM context
-│   │   ├── skills/
-│   │   └── ats_keywords.md
-│   ├── workers/
-│   │   ├── cv_worker.py
-│   │   └── arq_settings.py
-│   └── main.py                    # FastAPI lifespan
-├── tests/
-├── Dockerfile
-└── docker-compose.yml
+auto-cv2/                          # Monorepo (FE + BE)
+│
+├── backend/                       # FastAPI backend
+│   ├── app/
+│   │   ├── api/v1/
+│   │   │   ├── routes/
+│   │   │   │   ├── jobs.py          # POST /jobs, GET /jobs/{id}
+│   │   │   │   ├── admin.py          # FAISS rebuild trigger
+│   │   │   │   └── health.py
+│   │   │   ├── router.py
+│   │   │   └── middleware/
+│   │   │       ├── auth.py
+│   │   │       ├── rate_limit.py
+│   │   │       └── exception_handler.py
+│   │   ├── agents/
+│   │   │   ├── state.py              # WorkflowState TypedDict
+│   │   │   ├── workflow.py            # LangGraph builder
+│   │   │   └── nodes/
+│   │   │       ├── parse_node.py
+│   │   │       ├── validate_node.py
+│   │   │       ├── context_node.py
+│   │   │       ├── match_node.py
+│   │   │       ├── rewrite_node.py
+│   │   │       └── format_node.py
+│   │   ├── core/
+│   │   │   ├── config.py              # pydantic-settings
+│   │   │   ├── llm_factory.py         # Provider factory
+│   │   │   ├── exceptions.py
+│   │   │   └── dependencies.py
+│   │   ├── models/
+│   │   │   ├── schemas.py             # Pydantic v2 schemas
+│   │   │   └── db_models.py
+│   │   ├── repositories/
+│   │   │   └── job_repository.py      # Abstract + InMemory + Postgres
+│   │   ├── services/
+│   │   │   ├── parser/                # ParserStrategy pattern
+│   │   │   ├── context/               # ContextProvider pattern
+│   │   │   ├── matcher.py
+│   │   │   └── rewriter.py
+│   │   ├── knowledge/                 # .md files for LLM context
+│   │   │   ├── skills/
+│   │   │   └── ats_keywords.md
+│   │   ├── workers/
+│   │   │   ├── cv_worker.py
+│   │   │   └── arq_settings.py
+│   │   └── main.py                    # FastAPI lifespan
+│   ├── tests/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── fe/                             # React frontend
+│   ├── src/
+│   │   ├── main.tsx
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   ├── lib/api.ts              # Axios client + API functions
+│   │   ├── store/jobStore.ts       # Zustand store
+│   │   ├── hooks/usePolling.ts     # Polling hook
+│   │   ├── pages/
+│   │   │   ├── UploadPage.tsx
+│   │   │   └── ResultsPage.tsx
+│   │   └── components/
+│   │       ├── layout/Header.tsx
+│   │       ├── upload/FileDropzone.tsx
+│   │       └── results/ScoreDisplay.tsx
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── CLAUDE.md                   # FE-specific rules
+│
+├── docs/
+└── CLAUDE.md                       # Root project brain
 ```
+
+> **FE/BE split**: Both `backend/` and `fe/` are in the same repo. BE connects to PostgreSQL + Redis; FE connects to BE via `VITE_API_BASE_URL` env var.
 
 ---
 
